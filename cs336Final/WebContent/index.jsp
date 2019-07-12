@@ -23,6 +23,20 @@
 <!--===============================================================================================-->
 </head>
 <body>
+<%
+	try {
+
+		//Get the database connection
+		String url = "Mydatabase.cputfd1eymsx.us-east-1.rds.amazonaws.com";
+		Class.forName("com.mysql.jdbc.Driver");
+		
+		Connection con = DriverManager.getConnection(url);
+		} 
+	catch (Exception ex)
+		{
+		out.print(ex);
+		}
+%>
 	<div class="limiter">
 		<div class="container-login">
 			<div class="wrap-login p-l-55 p-r-55 p-t-65 p-b-50">
