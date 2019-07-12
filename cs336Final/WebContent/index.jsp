@@ -23,55 +23,35 @@
 <!--===============================================================================================-->
 </head>
 <body>
-<%
-	try {
-
-		//Get the database connection
-		String url = "Mydatabase.cputfd1eymsx.us-east-1.rds.amazonaws.com";
-		Class.forName("com.mysql.jdbc.Driver");
-		
-		Connection con = DriverManager.getConnection(url);
-		} 
-	catch (Exception ex)
-		{
-		out.print(ex);
-		}
-%>
 	<div class="limiter">
 		<div class="container-login">
 			<div class="wrap-login p-l-55 p-r-55 p-t-65 p-b-50">
-				<form class="login-form">
 					<span class="login-form-title p-b-33">
 						Account Login
 					</span>
-
-					<div class="wrap-input">
-						<input class="input" type="text" name="email" placeholder="Username">
-						<span class="focus-input-1"></span>
-						<span class="focus-input-2"></span>
-					</div>
-
-					<div class="wrap-input rs1">
-						<input class="input" type="password" name="pass" placeholder="Password">
-						<span class="focus-input-1"></span>
-						<span class="focus-input-2"></span>
-					</div>
-
-					<div class="container-login-form-btn m-t-20">
-						<button class="login-form-btn">
-							Sign in
-						</button>
-					</div>
-					<div class="text-center p-t-20">
-						<span class="txt1">
-							Create an account?
-						</span>
-
-						<a href="#" class="txt2 hov1">
-							Sign up
-						</a>
-					</div>
+				<form action="processLogin.jsp" method="GET">
+				<div class="wrap-input">
+					<input class="input" type="text" name="username" placeholder="Username">
+					<span class="focus-input-1"></span>
+					<span class="focus-input-2"></span>
+				</div>
+			
+				<div class="wrap-input rs1">
+					 <input class="input" type="text" name="pass" placeholder="Password"/>
+					 <span class="focus-input-1"></span>
+					 <span class="focus-input-2"></span>
+				</div>
+				
+					<input class="login-form-btn container-login-form-btn m-t-20" type="submit" value="Submit" />
 				</form>
+					<div class="text-center p-t-20">
+					<span class="txt1">
+						Create an account?
+					</span>
+					<a href="createAccount.jsp" class="txt2 hov1">
+						Sign up
+					</a>
+				</div>
 			</div>
 		</div>
 	</div>
