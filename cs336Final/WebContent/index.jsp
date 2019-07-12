@@ -42,7 +42,7 @@
 					 <span class="focus-input-2"></span>
 				</div>
 				
-					<input class="login-form-btn container-login-form-btn m-t-20" type="submit" value="Submit" />
+					<input class="login-form-btn container-login-form-btn m-t-20" type="submit" value="Log in" />
 				</form>
 					<div class="text-center p-t-20">
 					<span class="txt1">
