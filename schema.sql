@@ -16,6 +16,34 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `access`
+--
+
+DROP TABLE IF EXISTS `access`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `access` (
+  `userID` varchar(12) NOT NULL,
+  `ticketNumber` int(11) NOT NULL,
+  `timePurchased` datetime NOT NULL,
+  `bookingFee` int(11) NOT NULL,
+  PRIMARY KEY (`userID`,`ticketNumber`),
+  KEY `ticketNumber_idx` (`ticketNumber`),
+  CONSTRAINT `ticketNumber` FOREIGN KEY (`ticketNumber`) REFERENCES `ticket` (`ticketNumber`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `userID` FOREIGN KEY (`userID`) REFERENCES `user` (`userID`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `access`
+--
+
+LOCK TABLES `access` WRITE;
+/*!40000 ALTER TABLE `access` DISABLE KEYS */;
+/*!40000 ALTER TABLE `access` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `aircraft`
 --
 
@@ -24,7 +52,8 @@ DROP TABLE IF EXISTS `aircraft`;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `aircraft` (
   `FAAID` int(11) NOT NULL,
-  `maxCapacity` int(11) DEFAULT NULL,
+  `maxCapacity` int(11) NOT NULL,
+  `name` varchar(45) NOT NULL,
   PRIMARY KEY (`FAAID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -47,6 +76,7 @@ DROP TABLE IF EXISTS `airline`;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `airline` (
   `twoLetterID` char(2) NOT NULL,
+  `name` varchar(45) NOT NULL,
   PRIMARY KEY (`twoLetterID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -69,6 +99,9 @@ DROP TABLE IF EXISTS `airport`;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `airport` (
   `threeLetterID` char(3) NOT NULL,
+  `name` varchar(45) NOT NULL,
+  `city` varchar(45) NOT NULL,
+  `state` varchar(2) NOT NULL,
   PRIMARY KEY (`threeLetterID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -94,13 +127,17 @@ CREATE TABLE `flight` (
   `threeLetterID_Departs` char(3) NOT NULL,
   `threeLetterID_Arrives` char(3) NOT NULL,
   `flightNumber` int(11) NOT NULL,
-  `waitingList` int(11) DEFAULT NULL,
-  `currentCapacity` int(11) DEFAULT NULL,
-  `isDomestic` int(11) DEFAULT NULL,
-  `schedule` varchar(45) DEFAULT NULL,
-  `dateTime_Arrival` datetime DEFAULT NULL,
-  `dateTime_Departure` datetime DEFAULT NULL,
-  PRIMARY KEY (`FAAID`,`threeLetterID_Departs`,`threeLetterID_Arrives`,`flightNumber`)
+  `currentCapacity` int(11) NOT NULL,
+  `isDomestic` int(11) NOT NULL,
+  `daysOfWeek` varchar(45) NOT NULL,
+  `departsDateTime` datetime NOT NULL,
+  `arrivesDateTime` datetime NOT NULL,
+  PRIMARY KEY (`FAAID`,`threeLetterID_Departs`,`threeLetterID_Arrives`,`flightNumber`),
+  KEY `threeletterID_arrives_idx` (`threeLetterID_Arrives`),
+  KEY `threeletterID_departs_idx` (`threeLetterID_Departs`),
+  CONSTRAINT `FAAID` FOREIGN KEY (`FAAID`) REFERENCES `aircraft` (`FAAID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `threeletterID_arrives` FOREIGN KEY (`threeLetterID_Arrives`) REFERENCES `airport` (`threeLetterID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `threeletterID_departs` FOREIGN KEY (`threeLetterID_Departs`) REFERENCES `airport` (`threeLetterID`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -122,16 +159,16 @@ DROP TABLE IF EXISTS `ticket`;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `ticket` (
   `ticketNumber` int(11) NOT NULL,
-  `class` varchar(45) DEFAULT NULL,
-  `bookingFee` int(11) DEFAULT NULL,
-  `seatNumber` int(11) DEFAULT NULL,
-  `meal` varchar(45) DEFAULT NULL,
-  `flexible` varchar(45) DEFAULT NULL,
-  `numberStops_Arrival` int(11) DEFAULT NULL,
-  `numberStops_Departure` int(11) DEFAULT NULL,
-  `fare` varchar(45) DEFAULT NULL,
-  `purchaseDateTime` datetime DEFAULT NULL,
-  `isRoundTrip` int(11) DEFAULT NULL,
+  `class` varchar(45) NOT NULL,
+  `bookingFee` int(11) NOT NULL,
+  `seatNumber` int(11) NOT NULL,
+  `meal` varchar(45) NOT NULL,
+  `flexible` varchar(45) NOT NULL,
+  `numberStops_Arrival` int(11) NOT NULL,
+  `numberStops_Departure` int(11) NOT NULL,
+  `fare` varchar(45) NOT NULL,
+  `purchaseDateTime` datetime NOT NULL,
+  `isRoundTrip` int(11) NOT NULL,
   PRIMARY KEY (`ticketNumber`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -165,6 +202,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
+INSERT INTO `user` VALUES ('Harry','Potter'),('rjb348','myPass'),('Test','Yusdel'),('YusdelTest','123');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -177,4 +215,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-07-11 22:03:24
+-- Dump completed on 2019-07-17 16:13:31
