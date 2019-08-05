@@ -39,19 +39,26 @@
 			String storedPassword = result.getString("password");
 			//If password is correct, grant access
  			if (storedPassword.equals(password)){
+ 				session.setAttribute("UserID", user);
+ 				ps.close();
+ 		    	dbConnection.close();
  				response.sendRedirect("homepage.jsp"); //go to main page after login
  			}
  			else {
  				// wrong password
  				Boolean wrongPassword = new Boolean(true);
  			 	session.setAttribute("wrongPassword", wrongPassword);
+ 			 	ps.close();
+ 		    	dbConnection.close();
  			 	response.sendRedirect("index.jsp"); //return to login page
  			}
 		}
  		else {
  			// User does not exist
   			Boolean wrongUser = new Boolean(true);
- 			session.setAttribute("wrongUser", wrongUser);			
+ 			session.setAttribute("wrongUser", wrongUser);	
+ 			ps.close();
+	    	dbConnection.close();
  			response.sendRedirect("index.jsp"); //return to login page
  		}
 	}

@@ -46,16 +46,18 @@
 	 	
 	 	else {	 
 			//Make an insert statement for the Users table:
-			String insert = "INSERT INTO user(userID, password)" + "VALUES (?, ?)";
+			String insert = "INSERT INTO user(userID, password, name)" + "VALUES (?, ?, ?)";
 
 			//Create a Prepared SQL statement allowing you to introduce the parameters of the query
 			ps = dbConnection.prepareStatement(insert);
 
 			String newPass = request.getParameter("newpass");
+			String name = request.getParameter("name");
 	    	
 	    	//Add parameters of the query. Start with 1, the 0-parameter is the INSERT statement itself
 	    	ps.setString(1, newUser);
 	    	ps.setString(2, newPass);
+	    	ps.setString(3, name);
 	     
 	    	ps.executeUpdate();
 	    	ps.close();

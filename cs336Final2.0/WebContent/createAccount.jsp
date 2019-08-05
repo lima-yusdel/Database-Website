@@ -51,6 +51,11 @@
 				<span class="focus-input-1"></span>
 				<span class="focus-input-2"></span>
 			</div>
+			<div class="wrap-input">
+			 <input class="input" type="text" name="name" placeholder="Name">
+				<span class="focus-input-1"></span>
+				<span class="focus-input-2"></span>
+			</div>
 				
 			<input class="login-form-btn container-login-form-btn m-t-20" type="submit" value="Submit" />
 			</form>
