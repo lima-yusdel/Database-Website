@@ -21,11 +21,14 @@
 		String fromCity = String.valueOf(session.getAttribute("fromCity"));
 		String toCity = String.valueOf(session.getAttribute("toCity"));
 		
-		
-		
 		String query = "SELECT * " +
 					"FROM flight f " +
 					"Where f.departCity = ? " + 
+					"and f.arriveCity = ?" +
+					"union " +
+					 "SELECT * " +
+					 "FROM flight f " +
+					 "Where f.departCity = ? " + 
 					"and f.arriveCity = ?";
 		
 		
@@ -34,6 +37,8 @@
 		
 		ps.setString(1, fromCity);
 		ps.setString(2, toCity);
+		ps.setString(3, toCity);
+		ps.setString(4, fromCity);
 		
 		//Returns a ResultSet object to check query
 		ResultSet result = ps.executeQuery();
@@ -73,7 +78,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>flight results</title>
+	<title>Round flights</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 <!--===============================================================================================-->
@@ -149,7 +154,12 @@
 		<br>
 			</div>
 			<div class="wrap-input">
-			 <input class="input" type="text" name="flightA" placeholder="Flight Number">
+			 <input class="input" type="text" name="flightA" placeholder="Departing Flight Number">
+				<span class="focus-input-1"></span>
+				<span class="focus-input-2"></span>
+				</div>
+			<div class="wrap-input rs1">
+			 <input class="input" type="text" name="flightB" placeholder="Returning Flight Number">
 				<span class="focus-input-1"></span>
 				<span class="focus-input-2"></span>
 			</div>

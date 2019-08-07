@@ -17,28 +17,45 @@
 	
 		String query = "SELECT price " +
 					"FROM flight f " +
+					"Where f.flightNumber = ? " +
+					"union " +
+					"SELECT price " +
+					"FROM flight f " +
 					"Where f.flightNumber = ? ";
 		
 		
-		int flightNumber = Integer.valueOf((String)request.getParameter("flight"));
+		int flightNumberA = Integer.valueOf((String)request.getParameter("flightA"));
+		int flightNumberB = 0;
+		if(request.getParameter("flightB") != null)
+		{
+			flightNumberB = Integer.valueOf((String)request.getParameter("flightB"));
+		}
+		
+		
 		
 		//Create a Prepared SQL statement to check if the userID to be added already exists
 		PreparedStatement ps = dbConnection.prepareStatement(query);
 		
-		ps.setInt(1, flightNumber);
+		ps.setInt(1, flightNumberA);
+		ps.setInt(2, flightNumberB);
 		
 		//Returns a ResultSet object to check query
 		ResultSet result = ps.executeQuery();
 		
 		session = request.getSession();
-		Object[] price = new Object[1];
+		
+		String[] priceArray;
+		priceArray = null;
+		priceArray = new String[2];
+		
 		int i = 0;
 		while (result.next()) {
             // Read values using column name
-        String thePrice = result.getString("price");
-        price[i] = thePrice;
+        priceArray[i] = result.getString("price");
+            i++;
+  
 		}
-		session.setAttribute("price", price);
+		session.setAttribute("price", priceArray);
     	ps.close();
     	dbConnection.close();
 	}
@@ -71,24 +88,37 @@ catch (Exception ex) {
 	<div class="limiter">
 		<div class="container-login">
 			<div class="wrap-login p-l-55 p-r-55 p-t-65 p-b-50">
+			<a href="index.jsp">Log out</a>
+			<br>
+			<br>
 			<span class="login-form-title p-b-33">
 				Select Options
 			</span>
 			<form action="summary.jsp" method="POST">
 			<b>
-			<% String flightNumber = request.getParameter("flight");
-				out.print(String.format("<p>Flight number: %s</p>",flightNumber));
-			
-				session = request.getSession();
-				session.setAttribute("flightNum", flightNumber);
+			<%  String flightNumberA = request.getParameter("flightA");
+				String flightNumberB = request.getParameter("flightB");
 				
-				Object[] thePrice = (Object[])session.getAttribute("price");
-				for (int i=0; i < 1; i++){
-					if (thePrice[i] != null){
-							String column = (String) thePrice[i];
-							out.print(String.format("<p>Price (Before Addons):$ %s</p>", column));
+				session = request.getSession();
+				session.setAttribute("flightA", flightNumberA);
+				session.setAttribute("flightB", flightNumberB);
+				
+				out.print(String.format("<p>Departing Flight#: %s</p>",flightNumberA));
+				if(request.getParameter("flightB") != null)
+					{
+						out.print(String.format("<p>Returning Flight#: %s</p>",flightNumberB));
 					}
-					}
+			
+				String[] myArray;
+				myArray = null;
+				myArray = (String[])session.getAttribute("price");
+				
+				out.print(String.format("<p>Price of Departing Flight (Before Addons):$ %s</p>", myArray[0]));
+				if(request.getParameter("flightB") != null)
+				{
+				out.print(String.format("<p>Price of Returning Flight (Before Addons):$ %s</p>", myArray[1]));
+				}
+				
 			%>
 			</b>
 			<br>

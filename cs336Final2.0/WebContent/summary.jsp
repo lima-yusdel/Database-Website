@@ -2,9 +2,9 @@
     pageEncoding="ISO-8859-1"%>
 <%@ page import="java.io.*,java.util.*,java.sql.*"%>
 <%@ page import="javax.servlet.http.*,javax.servlet.*" %>
-<%@ page import= "java.util.Date"%>
+<%@ page import= "java.time.*"%>
 <%
-	try {
+	//try {
 	
 		Connection dbConnection = null;
 	
@@ -57,8 +57,7 @@
 			//UserID got from session above
 			//name got from Query above
 			
-			int flightNumberA = Integer.valueOf((String)session.getAttribute("flightNum"));
-			
+			int flightNumberA = Integer.valueOf((String)session.getAttribute("flightA"));
 			int meal = Integer.valueOf((String)request.getParameter("meal"));	
 			int theClass = Integer.valueOf((String)request.getParameter("class"));
 	
@@ -78,17 +77,21 @@
 				}	
 			}
 			
-			Date date = Calendar.getInstance().getTime(); 
-			java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+
+			Timestamp timestamp = Timestamp.valueOf(LocalDateTime.now());
 			
-			Object[] thePrice = (Object[])session.getAttribute("price");
-			String column = "";
-			for (int i=0; i < 1; i++){
-				if (thePrice[i] != null){
-						column = (String) thePrice[i];
-				}
-				}
-			int totalFare = Integer.valueOf(column);	
+			int totalFare = 0;
+			String[] priceArray;
+			priceArray = (String[])session.getAttribute("price");
+			
+			if(session.getAttribute("flightB") != null)
+	    	{
+				totalFare = Integer.valueOf(priceArray[0]) +Integer.valueOf(priceArray[1]); 	
+	    	}
+			else
+			{
+				totalFare = Integer.valueOf(priceArray[0]);
+			}
 			if(meal == 1)
 			{
 				totalFare = totalFare + 15;
@@ -112,27 +115,33 @@
 	    	ps.setString(3, name);
 	    	ps.setInt(4, flightNumberA);
 	    	ps.setInt(5,0); //seatNumberA
-	    	ps.setInt(6,0);//flightNumberB
-	    	ps.setInt(7,0);//seatNumberB
+	    	if(session.getAttribute("flightB") != null){
+				int flightNumberB = Integer.valueOf((String)session.getAttribute("flightB"));
+				
+		    		ps.setInt(6, flightNumberB);//flightNumberB
+		    		ps.setInt(7, 0);//seatNumberB
+		    	}
+		    	else
+		    	{
+		    		ps.setNull(6, java.sql.Types.INTEGER);//flightNumberB	
+		    		ps.setNull(7, java.sql.Types.INTEGER);//seatNumberB
+		    	}
+			
 	    	ps.setString(8, insertClass);
 	    	ps.setInt(9, meal);
-	    	ps.setDate(10, sqlDate);
+	    	ps.setTimestamp(10, timestamp);
 	    	ps.setInt(11, totalFare);
 	    	
 	    	ps.executeUpdate();
 	    	ps.close();
 	    	dbConnection.close();
- 		}
-
-	catch (Exception ex) {
-		out.print(ex);
-	}
+ 		
 
 %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>Registration</title>
+	<title>Summary</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 <!--===============================================================================================-->
@@ -152,19 +161,16 @@
 	<div class="limiter">
 		<div class="container-login">
 			<div class="wrap-login p-l-55 p-r-55 p-t-65 p-b-50">
+			<a href="index.jsp">Log out</a>
+			<br>
 			<span class="login-form-title p-b-33">
 				Summary
 			</span>
-			<% 
-			int totalFare =(Integer)session.getAttribute("total");
+			<%
 			out.print(String.format("<p><b>Total:$ %d</p></b>", totalFare));
 			%>
 			<br>
-			<b>
 			<a href="homepage.jsp"><button>Search more flights</button></a>
-			</b>
-			<div class="text-align:center fs-14 p-l-35 p-b-20 p-t-5 p-r-10">
-			</div>
 			</div>
 		</div>
 	</div>

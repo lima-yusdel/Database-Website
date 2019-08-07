@@ -30,6 +30,12 @@
 				Create an Account
 			</span>
 			<div class="text-align:center fs-14 p-l-35 p-b-20 p-t-5 p-r-10">
+			<button onclick="goBack()">Go Back</button>
+			<script>
+				function goBack() {
+				  window.history.back();
+				}
+				</script>
 			<%
 				Boolean obj = (Boolean) session.getAttribute("userExists");
 				if (Boolean.TRUE.equals(obj)) {
@@ -45,7 +51,6 @@
 				<span class="focus-input-1"></span>
 				<span class="focus-input-2"></span>
 			</div>
-			
 			<div class="wrap-input rs1">
 			 <input class="input" type="text" name="newpass" placeholder="Password"/>
 				<span class="focus-input-1"></span>

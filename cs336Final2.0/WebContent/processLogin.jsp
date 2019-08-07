@@ -19,7 +19,7 @@
 	
 		
 		//Check if User exists
-		String query = "SELECT userID, password " +
+		String query = "SELECT * " +
 						"FROM user " + 
 						"WHERE userID=?";
 	
@@ -39,10 +39,18 @@
 			String storedPassword = result.getString("password");
 			//If password is correct, grant access
  			if (storedPassword.equals(password)){
+ 				//Also, check isAdmin
+ 				int isAdmin = result.getInt("isAdmin");
+ 				if(isAdmin == 1){
+ 					ps.close();
+ 					dbConnection.close();
+ 					response.sendRedirect("admin.jsp");
+ 				} else {
  				session.setAttribute("UserID", user);
  				ps.close();
  		    	dbConnection.close();
  				response.sendRedirect("homepage.jsp"); //go to main page after login
+ 				}	
  			}
  			else {
  				// wrong password

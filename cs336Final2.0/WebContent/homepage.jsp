@@ -6,7 +6,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>Registration</title>
+	<title>Search Flights</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 <!--===============================================================================================-->
@@ -22,32 +22,33 @@
 	<link rel="stylesheet" type="text/css" href="css/main.css">
 <!--===============================================================================================-->
 </head>
-<body>	
-	<div class="limiter">
-		<div class="container-login">
-			<div class="wrap-login p-l-55 p-r-55 p-t-65 p-b-50">
+<body>
+<div class="limiter">
+	<div class="container-login">
+		<div class="wrap-login p-l-55 p-r-55 p-t-65 p-b-50">
+			<a href="index.jsp">Log out</a>
 			<span class="login-form-title p-b-33">
 				Find the best flights 
 			</span>
 			<div class="text-align:center fs-14 p-l-35 p-b-20 p-t-5 p-r-10">
-			</div>
-			<form action="selectFlight.jsp" method="POST">
+			<form action="redirect.jsp" method="POST">
 			<div class="wrap-input">
-			 <input class="input" type="text" name="From" placeholder="From: (city)">
+				<input class="input" type="text" name="From" placeholder="From: (city)">
 				<span class="focus-input-1"></span>
 				<span class="focus-input-2"></span>
 			</div>
-			
 			<div class="wrap-input rs1">
-			 <input class="input" type="text" name="To" placeholder="To where: (city)"/>
+				<input class="input" type="text" name="To" placeholder="To where: (city)"/>
 				<span class="focus-input-1"></span>
 				<span class="focus-input-2"></span>
-			</div>
-				
+			</div>	
+			<input type="radio" name="flight" value="2"> Round Trip<br>
+			<input type="radio" name="flight" value="1"> One Way<br>
 			<input class="login-form-btn container-login-form-btn m-t-20" type="submit" value="Find flights" />
 			</form>
 			</div>
 		</div>
 	</div>
+</div>	
 </body>
 </html>
