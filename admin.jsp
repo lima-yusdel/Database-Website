@@ -27,6 +27,9 @@
 	<title>Administrative Functions</title>
 	<meta charset="UTF-8">
 </head>
+<div Class = "topleftcorner">
+	<a href="index.jsp">Log out</a>
+	</div>
 <body>	
 	<h1> Administrative Functions </h1>
 	

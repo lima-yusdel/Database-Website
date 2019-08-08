@@ -6,6 +6,9 @@
 <meta charset="UTF-8">
 <title>Customer Representative Functions</title>
 </head>
+<div Class = "topleftcorner">
+	<a href="index.jsp">Log out</a>
+	</div>
 <body>
 
 <h1>Customer Representative Functions</h1>
@@ -28,6 +31,23 @@
 		</tr>
 		<tr>    
 		<td>Ticket number to edit:</td><td><input type="text" name="editTicket"></td>
+		</tr>
+		<tr>    
+		<td><input type="radio" name="mealButton" value="premium"/>Premium Meal: +$15.00</td>
+		</tr>
+		<tr>    
+		<td><input type="radio" name="mealButton" value="none"/>No Meal: +$0.00</td>
+		</tr>
+		<tr>
+		</tr>
+		<tr>    
+		<td><input type="radio" name="classButton" value="first"/>First Class: +$100.00</td>
+		</tr>
+		<tr>    
+		<td><input type="radio" name="classButton" value="business"/>Business Class: +$50.00</td>
+		</tr>
+		<tr>    
+		<td><input type="radio" name="classButton" value="economy"/>Economy Class: +$0.00</td>
 		</tr>
 		</table>
 		<input type="submit" value="submit">

@@ -65,12 +65,43 @@
 	 	//	Edit a flight reservation for a customer:
 	 	//--------------------------------------------------------------------
 		else if (request.getParameter("editUser") != null){
-			// Editing user
-			// Does not check for errors
+			
 			String user = request.getParameter("editUser");
-			String ticket = request.getParameter("editTicket");
-					
-
+			String ticket = null;
+			int meal = -1;
+			int classType = -1;
+			
+			// Check for Paramaters, and set as attributes
+			if (request.getParameter("editTicket") != null){
+				ticket = request.getParameter("editTicket");
+			}
+			// 1 : premium, 0 : no meal
+			if (request.getParameter("mealButton") != null){
+				if (String.valueOf((String)request.getParameter("mealButton")) == "premium"){
+					meal = 1;
+				} else {
+					meal = 0;
+				}
+			} // 2: first class, 1: business, 0 : economy
+			if (request.getParameter("classButton") != null){
+				if (String.valueOf((String)request.getParameter("classButton")) == "first"){
+					classType = 2;
+				} else if (String.valueOf((String)request.getParameter("classButton")) == "business"){
+					classType = 1;
+				} else {
+					classType = 0;
+				}
+			} 
+			
+			//session.setAttribute("editTicket", ticket);
+			if (meal != -1){
+				session.setAttribute("custRepMeal", meal);
+			}
+			
+			if (classType != -1){
+				session.setAttribute("custRepClass", classType);
+			}
+			
 	    	response.sendRedirect("summary.jsp");
 			
 		}
@@ -140,10 +171,8 @@
 			stmt.close();
 		    dbConnection.close();
 		    
-		    out.print(tuples.toString());
 		    
 		    out.print("<h1>" + queryTitle + "</h1>");
-		    out.print(message);
 		    
 			out.print(help.printQuery(tuples, columns));
 			
