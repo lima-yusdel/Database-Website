@@ -10,15 +10,12 @@
 	<title>Your Results</title>
 	<meta charset="UTF-8">
 </head>
+<div Class = "topleftcorner">
+	<a href="index.jsp">Log out</a>
+	</div>
 <body>
-<div class = "topcornerleft">
-			<a href="index.jsp">Log out</a>
-			</div>
-			<br>
 
  <%
- 
- 	//try {
 
 		//Get the database connection
 		Connection dbConnection = null;
@@ -154,8 +151,7 @@
 			// Query Statement
 			str = "SELECT * " +
 				"FROM ticket " +
-				"WHERE purchaseDateTime BETWEEN \"" + firstDay + "\" AND \"" + lastDay + "\" " +
-				"ORDER BY purchaseDateTime";
+				"WHERE DATE (purchaseDateTime) >= \'" + firstDay + "\' AND DATE (purchaseDateTime) <= \'" + lastDay + "\'";
 			
 			stmt.executeQuery(str);
 			message = "First day is: " + firstDay + "\nLast day is: " + lastDay;
@@ -164,8 +160,7 @@
 			columns.add("purchaseDateTime");
 			columns.add("ticketNumber");
 			columns.add("userID");
-			columns.add("name");
-			columns.add("flightNumber");
+			columns.add("flightNumberA");
 			columns.add("totalFare");
 		}
 		
@@ -181,28 +176,33 @@
 			if (button.equals("flightNumber")){ 
 				// Query Statement											
 				str = "SELECT * " +
-						"FROM ticket t, flight f " +
-						"WHERE t.userID = f.userID" +
-						"AND t.flightNumberA = \"" + showFlights + "\"";
+						"FROM ticket t, flight f , user u " +
+						"WHERE t.flightNumberA = f.flightNumber " +
+						"AND t.userID = u.userID " +
+						"AND f.flightNumber = \"" + showFlights + "\"";
 
-				columns.add("flightNumber");
+				
 
 				
 				// Show flights based on customer name	
 			} else {	
 				// Query Statement					
 				str = "SELECT * " +
-						"FROM ticket, flight " +
-						"WHERE ticket.userID = flight.userID" +
-						"AND flightNumber = \"" + showFlights + "\"";
+						"FROM ticket t, flight f, user u " +
+						"WHERE t.flightNumberA = f.flightNumber " +
+						"AND t.userID = u.userID " +
+						"AND u.name = \"" + showFlights + "\"";
 				
-				columns.add("name");
+				
 	
 			}
 			
 			stmt.executeQuery(str);
 			isQuery = true;
 			queryTitle = "Flight Reservations";
+			
+			columns.add("name");
+			columns.add("flightNumber");
 			columns.add("threeLetterID_Departs");
 			columns.add("threeLetterID_Arrives");
 			columns.add("flightNumber");
@@ -221,22 +221,97 @@
 			String showRevenue = request.getParameter("showRevenue");
 			String button = request.getParameter("showRevenueButton");
 			
+			// Show revenue based on flight number 
 			if (button.equals("flightNum")){
-				// Query Statement					// Show revenue based on flight number 
+				// Query Statement					
+				str = "SELECT * " +
+						"FROM ticket t, flight f , user u , aircraft a " +
+						"WHERE t.flightNumberA = f.flightNumber " +
+						"AND t.userID = u.userID " +
+						"AND f.FAAID = a.FAAID " +
+						"AND f.flightNumber = \"" + showRevenue + "\"";
 				
-				isQuery = true;
-			}
-			else if (button.equals("airline")){
-				// Query Statement					// Show revenue based on airline
-				
-				isQuery = true;
-			} else {
-				// Query Statement					// Show revenue based on userID
-				
-				isQuery = true;
 			}
 			
+			// Show revenue based on airline
+			else if (button.equals("airline")){
+				// Query Statement
+				str = "SELECT * " +
+						"FROM ticket t, flight f , user u , aircraft a " +
+						"WHERE t.flightNumberA = f.flightNumber " +
+						"AND t.userID = u.userID " +
+						"AND f.FAAID = a.FAAID " +
+						"AND a.ownedBy = \"" + showRevenue + "\"";
+				
+			// Show revenue based on userID	
+			} else {
+				// Query Statement
+				str = "SELECT * " +
+						"FROM ticket t, flight f , user u , aircraft a " +
+						"WHERE t.flightNumberA = f.flightNumber " +
+						"AND t.userID = u.userID " +
+						"AND f.FAAID = a.FAAID " +
+						"AND t.userID = \"" + showRevenue + "\"";
+				
+			}
+			
+			stmt.executeQuery(str);
+			isQuery = true;
+			queryTitle = "Flight Reservations";
+			
+			columns.add("userID");
+			columns.add("flightNumber");
+			columns.add("ownedBy");
+			columns.add("threeLetterID_Departs");
+			columns.add("threeLetterID_Arrives");
+			columns.add("flightNumber");
+			columns.add( "totalFare");
+			
 		}
+		//--------------------------------------------------------------------
+	 	// The Customer who has generated the most total revenue is:
+	 	//--------------------------------------------------------------------
+		else if (request.getParameter("popularityButton") != null){
+		    
+			String button = request.getParameter("popularityButton");
+			if (button.equals("customer")){
+			
+		    // The Customer who has generated the most total revenue:
+		    String customersTotalFare = "(SELECT t.userID, SUM(totalFare) total " +
+		    						"FROM ticket t " + 
+		    						"GROUP BY t.userID) s ";
+		    
+		    str = "SELECT s.userID " +
+		    		"FROM " + customersTotalFare +
+		    		"HAVING MAX(total) ";
+		    
+		    
+		    stmt.executeQuery(str);
+		    isQuery = true;
+		    queryTitle = "Flight Reservations";
+		    
+		    columns.add("userID");
+		   	
+		  	//--------------------------------------------------------------------
+			// The most actively booked flight is:
+			//--------------------------------------------------------------------
+			} else {
+				
+			str = "SELECT f.flightNumber " +
+					"FROM flight f " +
+					"WHERE f.currentCapacity = (SELECT MAX(f.currentCapacity) " +
+												"FROM flight f)";
+			
+			stmt.executeQuery(str);
+		    isQuery = true;
+		    queryTitle = "Flight Reservations";
+		    
+		    columns.add("flightNumber");
+				
+			}
+
+		}
+	 	
 		
 		//--------------------------------------------------------------------
 	 	// Show all flights based on Airport
@@ -277,6 +352,7 @@
 			stmt.close();
 		    dbConnection.close();
 		    
+		    out.print(tuples.toString());
 		    
 		    out.print("<h1>" + queryTitle + "</h1>");
 		    out.print(message);
@@ -286,12 +362,7 @@
 		} else {
 			// Can write html to print message here verifying admin function.
 		}
-
- 	//}
- 
-	//catch (Exception ex) {
-	//	out.print(ex);
-	//} 	
+	
 
 %>
 	<form action="admin.jsp" method="POST">

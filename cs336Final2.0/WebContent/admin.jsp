@@ -1,16 +1,36 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="java.io.*,java.util.*,java.sql.*"%>
+<%@ page import="javax.servlet.http.*,javax.servlet.*"%>
+<%@ page import="com.cs336.pkg.*"%>
+    
+    
+   <%
+    
+  //Get the database connection
+  	Connection dbConnection = null;
+  	String url = "jdbc:mysql://Mydatabase.cputfd1eymsx.us-east-1.rds.amazonaws.com:3306/MirandaDatabase";
+  	Properties info  = new Properties();
+  	info.put("user", "MirandaDatabase"); //stores the username and password
+  	info.put("password", "miranda19");
+  	Class.forName("com.mysql.jdbc.Driver").newInstance(); //The mysql connector
+  		
+  	dbConnection = DriverManager.getConnection(url, info); //Get the connection
+  	
+    
+    
+    %>
+    
 <!DOCTYPE html>
 <html lang="en">
 <head>
 	<title>Administrative Functions</title>
 	<meta charset="UTF-8">
 </head>
+<div Class = "topleftcorner">
+	<a href="index.jsp">Log out</a>
+	</div>
 <body>	
-<div class = "topcornerleft">
-			<a href="index.jsp">Log out</a>
-			</div>
-			<br>
 	<h1> Administrative Functions </h1>
 	
 	<h2>Add, Edit or Delete Information for a Customer or a Customer Representative:</h2>
@@ -110,9 +130,18 @@
 		<input type="submit" value="submit">
 	</form>
 	
-	<h2>The Customer who has generated the most total revenue is: "Insert Query output here"</h2>
-	
-	<h2>The most actively booked flight is: "Insert Query output here"</h2>
+	<h2>Show revenue based on popularity:</h2>
+	<form method="post" action="processAdminFunc.jsp">
+		<table>
+		<tr>
+		<td><input type="radio" name="popularityButton" value="customer"/>Customer who generated the most total revenue</td>
+		</tr>
+		<tr>
+		<td><input type="radio" name="popularityButton" value="flight"/>The most actively booked flight</td>
+		</tr>
+		</table>
+		<input type="submit" value="submit">
+	</form>
 	
 	<h2>Show all flights based on Airport:</h2>
 	<form method="post" action="processAdminFunc.jsp">

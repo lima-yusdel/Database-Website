@@ -39,18 +39,23 @@
 			String storedPassword = result.getString("password");
 			//If password is correct, grant access
  			if (storedPassword.equals(password)){
- 				//Also, check isAdmin
+ 			// Also, check for isAdmin to determine if Admin should be granted.
  				int isAdmin = result.getInt("isAdmin");
- 				if(isAdmin == 1){
+ 				int isEmployee = result.getInt("isEmployee");
+ 				if (isAdmin == 1){
+ 					ps.close();
+ 		    		dbConnection.close();
+ 					response.sendRedirect("admin.jsp");
+ 				}
+ 				else if (isEmployee == 1){
  					ps.close();
  					dbConnection.close();
- 					response.sendRedirect("admin.jsp");
+ 					response.sendRedirect("custRep.jsp");
  				} else {
- 				session.setAttribute("UserID", user);
- 				ps.close();
- 		    	dbConnection.close();
- 				response.sendRedirect("homepage.jsp"); //go to main page after login
- 				}	
+ 					ps.close();
+ 		    		dbConnection.close();
+ 					response.sendRedirect("homepage.jsp"); //go to main page after login
+ 				}
  			}
  			else {
  				// wrong password
