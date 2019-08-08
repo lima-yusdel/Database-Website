@@ -10,6 +10,9 @@
 	<title>Your Results</title>
 	<meta charset="UTF-8">
 </head>
+<div Class = "topleftcorner">
+	<a href="index.jsp">Log out</a>
+	</div>
 <body>
 
  <%
@@ -349,10 +352,7 @@
 			stmt.close();
 		    dbConnection.close();
 		    
-		    out.print(tuples.toString());
-		    
 		    out.print("<h1>" + queryTitle + "</h1>");
-		    out.print(message);
 		    
 			out.print(help.printQuery(tuples, columns));
 			
