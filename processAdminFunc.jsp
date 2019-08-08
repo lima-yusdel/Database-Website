@@ -13,8 +13,6 @@
 <body>
 
  <%
- 
- 	//try {
 
 		//Get the database connection
 		Connection dbConnection = null;
@@ -267,6 +265,50 @@
 			columns.add( "totalFare");
 			
 		}
+		//--------------------------------------------------------------------
+	 	// The Customer who has generated the most total revenue is:
+	 	//--------------------------------------------------------------------
+		else if (request.getParameter("popularityButton") != null){
+		    
+			String button = request.getParameter("popularityButton");
+			if (button.equals("customer")){
+			
+		    // The Customer who has generated the most total revenue:
+		    String customersTotalFare = "(SELECT t.userID, SUM(totalFare) total " +
+		    						"FROM ticket t " + 
+		    						"GROUP BY t.userID) s ";
+		    
+		    str = "SELECT s.userID " +
+		    		"FROM " + customersTotalFare +
+		    		"HAVING MAX(total) ";
+		    
+		    
+		    stmt.executeQuery(str);
+		    isQuery = true;
+		    queryTitle = "Flight Reservations";
+		    
+		    columns.add("userID");
+		   	
+		  	//--------------------------------------------------------------------
+			// The most actively booked flight is:
+			//--------------------------------------------------------------------
+			} else {
+				
+			str = "SELECT f.flightNumber " +
+					"FROM flight f " +
+					"WHERE f.currentCapacity = (SELECT MAX(f.currentCapacity) " +
+												"FROM flight f)";
+			
+			stmt.executeQuery(str);
+		    isQuery = true;
+		    queryTitle = "Flight Reservations";
+		    
+		    columns.add("flightNumber");
+				
+			}
+
+		}
+	 	
 		
 		//--------------------------------------------------------------------
 	 	// Show all flights based on Airport
@@ -317,12 +359,7 @@
 		} else {
 			// Can write html to print message here verifying admin function.
 		}
-
- 	//}
- 
-	//catch (Exception ex) {
-	//	out.print(ex);
-	//} 	
+	
 
 %>
 	<form action="admin.jsp" method="POST">
